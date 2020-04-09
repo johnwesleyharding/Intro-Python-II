@@ -1,4 +1,7 @@
+
 from room import Room
+from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -21,23 +24,32 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
-
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+# room['outside'].n_to = room['foyer']
+# room['foyer'].s_to = room['outside']
+# room['foyer'].n_to = room['overlook']
+# room['foyer'].e_to = room['narrow']
+# room['overlook'].s_to = room['foyer']
+# room['narrow'].w_to = room['foyer']
+# room['narrow'].n_to = room['treasure']
+# room['treasure'].s_to = room['narrow']
+
+room['outside'].n_to = 'foyer'
+room['foyer'].s_to = 'outside'
+room['foyer'].n_to = 'overlook'
+room['foyer'].e_to = 'narrow'
+room['overlook'].s_to = 'foyer'
+room['narrow'].w_to = 'foyer'
+room['narrow'].n_to = 'treasure'
+room['treasure'].s_to = 'narrow'
 
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
+hero = Player('Hero')
 
 # Write a loop that:
 #
@@ -49,3 +61,28 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# turn_limit = 1000000
+# for i in range(turn_limit):
+
+while True:
+
+    print(room[hero.room].name)
+    print(room[hero.room].description)
+    
+    action = input('Action? ').lower()
+    
+    if action in ('n', 'e', 's', 'w'):
+        
+#         action += '_to'
+#         hero.room = room[hero.room].getattr(Room, action)
+
+        hero.room = room[hero.room].n_to
+    
+    elif action == 'q':
+        
+        break
+        
+    else:
+        
+        print('Enter n, e, s, w to move or q to quit')
