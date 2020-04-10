@@ -103,6 +103,11 @@ while True:
             if room[hero.room].items != None and room[hero.room].items != []:
                 
                 print(f'The room contains: {", ".join([x for x in room[hero.room].items])}')
+#                 print(f'The room contains:')
+                
+#                 for item in room[hero.room].items:
+                    
+#                     print(item)
     
     elif action in ('i', 'inventory'):
         
