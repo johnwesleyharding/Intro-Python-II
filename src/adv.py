@@ -3,14 +3,21 @@ from room import Room
 from player import Player
 from item import Item
 
+# Declare items before rooms
+
+cloak = Item('cloak', 'The cloak itself is invisible.')
+shield = Item('shield', 'It will keep the rain off of your head.')
+
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mount beckons",
+                    [cloak]),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+passages run north and east.""",
+                    [shield]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
@@ -65,24 +72,92 @@ hero = Player('Hero')
 # turn_limit = 1000000
 # for i in range(turn_limit):
 
-while True:
+print(room[hero.room].name)
+print(room[hero.room].description)
 
-    print(room[hero.room].name)
-    print(room[hero.room].description)
+while True:
     
-    action = input('Action? ').lower()
+    print()
+    action = input('Action? ').lower().split(' ')
+    
+    if len(action) > 1:
+        
+        target = action[1]
+        
+    action = action[0]
     
     if action in ('n', 'e', 's', 'w'):
         
-#         action += '_to'
-#         hero.room = room[hero.room].getattr(Room, action)
-
-        hero.room = room[hero.room].n_to
+        action += '_to'
+        
+        if getattr(room[hero.room], action) == None:
+            
+            print('cannot advance in this direction')
+            
+        else:
+            
+            hero.room = getattr(room[hero.room], action)
+            print(room[hero.room].name)
+            print(room[hero.room].description)
+            
+            if room[hero.room].items != None:
+                
+                print(f'The room contains: {[x.name for x in room[hero.room].items]}')
+#                 print(f'The room contains:')
+                
+#                 for item in room[hero.room].items:
+                    
+#                     print(item.name)
     
+    elif action in ('i', 'inventory'):
+        
+        if len(hero.items) > 0:
+            
+            print('You hold these items:')
+            for item in hero.items:
+                
+                print(item.name)
+                            
+        else:
+            
+            print('You have no items.')
+        
+    
+    elif action in ('take', 'get'):
+        
+        stuff = []
+        for item in room[hero.room].items:
+                
+            stuff.append(item.name)
+        
+        if target in stuff:
+
+            hero.items.append(target)
+#             room[hero.room].items.remove(target)
+            print(room[hero.room].items)
+            print(f'You take the {target.name}.')
+            print(target.description)
+            
+        else:
+            
+            print('There is no such item here.')
+            print(room[hero.room].items)
+            
+    elif action == 'drop':
+        
+        if target in hero.items:
+            
+            hero.items.remove(target)
+            print(f'You drop the {target.name}; it hits the floor and shatters.')
+            
+        else:
+            
+            print('You possess no such item.')
+        
     elif action == 'q':
         
         break
         
     else:
         
-        print('Enter n, e, s, w to move or q to quit')
+        print('Enter n, e, s, w to move, q to quit, i to see inventory, take <item>, or drop <item>')

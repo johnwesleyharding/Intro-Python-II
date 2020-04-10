@@ -3,7 +3,7 @@
 
 class Room:
 
-    def __init__(self, name, description):
+    def __init__(self, name, description, items = None):
         
         self.name = name
         self.description = description
@@ -11,4 +11,4 @@ class Room:
         self.e_to = None
         self.s_to = None
         self.w_to = None
-        self.items = []
+        self.items = [] if items is None else items
